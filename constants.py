@@ -1,12 +1,3 @@
-WHITESPACE = ' '
-ALPHABETIC = '@'
-NUMERIC = '~'
-EMPTY = '#'
-
-LPAREN = '('
-
-
-
 #Used for the expression grammar non-terminal names, since
 #they won't show up in assignment statements or Hoare assertions
 EXPRESSION = '$'
@@ -14,6 +5,11 @@ EXPONENTS = '{'
 MULTIDIV = '}'
 ADDSUB = '%'
 ATOMS = '&'
+
+EMPTY = '#'
+ALPHABETIC = '@'
+NUMERIC = '#'
+WHITESPACE = ' '
 
 
 

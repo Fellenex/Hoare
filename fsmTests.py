@@ -1,29 +1,7 @@
+#Written by Chris Keeler on July 1st, 2015
+
 from fsm import *
-import sys
-
-#Retrieves the contents of a file with linebreaks,
-#	splitting each line into its own string
-def getLines(fileName):
-	with open(fileName) as f:
-		lines = f.readlines()
-	stripped = []
-	for line in lines:
-		stripped.append(line.rstrip('\n'))
-	return stripped
-
-#Compares two lists of 'T'/'F' values to compare the FSM's real acceptance vs. its intended acceptance
-def checkAnswers(answerKey,testAnswers):
-	offenses = 0
-
-	if not(len(answerKey) == len(testAnswers)):
-		print "Answer lists' lengths do not match"
-
-	for i in range(len(answerKey)):
-		if answerKey[i] != testAnswers[i]:
-			print "comparing: "+answerKey[i]+" with "+testAnswers[i]+" at index "+str(i)
-			offenses+=1
-
-	return offenses
+from testing import *
 
 def runTests(yourFSM,answerKeyFileName,testStringsFileName):
 	tests = getLines(testStringsFileName)
@@ -37,8 +15,7 @@ def runTests(yourFSM,answerKeyFileName,testStringsFileName):
 			testAnswers.append('F')
 
 	score = checkAnswers(answerKey,testAnswers)
-	print "Score is: "+str(score)
-	print "(You want a low score)"
+	print "Score is: "+str(len(answerKey)-score)+"/"+str(len(answerKey))
 
 
 def oddNumZeroesAndOnes():
@@ -65,7 +42,7 @@ def oddNumZeroesAndOnes():
 	stateThree.addTransition(Transition(stateFour,'1'))	#odd number of 1s
 	stateFour.addTransition(Transition(stateThree,'1'))	#even number of 1s
 
-	runTests(oddFSM,"tests/oddOnesAndZeroesAnswers.txt","tests/binaryTests.txt")
+	runTests(oddFSM,"tests/FSMs/oddOnesAndZeroesAnswers.txt","tests/FSMs/binaryTests.txt")
 
 def nZeroesNOnes():
 	evenPDA = PDA()
@@ -80,7 +57,7 @@ def nZeroesNOnes():
 	stateOne.addTransition(PDA_Transition(stateTwo,'1','#','X'))
 	stateTwo.addTransition(PDA_Transition(stateTwo,'1','#','X'))
 
-	runTests(evenPDA,"tests/nZeroesNOnesAnswers.txt","tests/binaryTests.txt")
+	runTests(evenPDA,"tests/FSMs/nZeroesNOnesAnswers.txt","tests/FSMs/binaryTests.txt")
 	
 #oddNumZeroesAndOnes()
 nZeroesNOnes()
