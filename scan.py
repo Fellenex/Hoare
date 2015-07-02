@@ -32,25 +32,32 @@ def collectNumber(text,tokens,x):
 			characterStack.append(text[x])
 			x+=1
 		else:
+			print "No more numbers"
 			break
 	
-	if text[x] == '.':
-		#float number
-		characterStack.append(text[x])
-		x+=1
-		rhs = False
-		while x<len(text):
-			if unicode(text[x], 'utf-8').isnumeric():
-				characterStack.append(text[x])
-				rhs = True
-			else:
-				break
+	try:
+		if text[x] == '.':
+			#float number
+			characterStack.append(text[x])
+			x+=1
+			rhs = False
+			while x<len(text):
+				if unicode(text[x], 'utf-8').isnumeric():
+					characterStack.append(text[x])
+					rhs = True
+					x+=1
+				else:
+					break
 
-		if rhs:
-			tokens.append((sFLOAT,''.join(characterStack)))
+			if rhs:
+				tokens.append((sFLOAT,''.join(characterStack)))
+			else:
+				tokens.append((sILLEGAL, ''.join(characterStack)+text[x]))
 		else:
-			tokens.append((sILLEGAL, ''.join(characterStack)+text[x]))
-	else:
+			tokens.append((sINTEGER,''.join(characterStack)))
+
+	except IndexError:
+		#This occurs when a number is the last thing read in, because of the increment to x in the previous while loop
 		tokens.append((sINTEGER,''.join(characterStack)))
 
 	return x
@@ -74,12 +81,16 @@ def scan(text):
 		#We increment c here and below, since collectIdentifier() and collectNumber()
 		#leave the counter on the next character to be scanned, but these cases do not.
 		elif text[c] in outputTokens:
+			print "Found a good char: "+text[c]
 			tokens.append(outputTokens[text[c]])
 			c+=1
 
 		else:
+			print "Found a bad char: "+text[c]
 			tokens.append((sILLEGAL, text[c]))
 			c+=1
+
+	print "Finished scanning, starting writing"
 
 	with open('scanOutput.txt','w') as f:
 		for token in tokens:
@@ -102,8 +113,7 @@ def runTests(answerKeyFileName,testStringsFileName):
 	print "Score is: "+str(len(answerKey)-score)+"/"+str(len(answerKey))
 
 
-#tempText="l\took\nwhhoooo ray\nw2hat\n"
-#scan(tempText)
-o = scan("1 12 12.34 12+34 12-34")
+o = scan("1 12 12.34 12+34 1234")
+k = scan("`~!@#$%^&*()-+=<>./")
 
-runTests("tests/scanner/identifiersAnswers.txt", "tests/scanner/identifiersTests.txt")
+#runTests("tests/scanner/identifiersAnswers.txt", "tests/scanner/identifiersTests.txt")
