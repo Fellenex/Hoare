@@ -1,0 +1,3 @@
+('sIDENTIFIER', 'w')
+('sINTEGER', '2')
+('sIDENTIFIER', 'hat')

@@ -5,13 +5,16 @@ from constants import *
 
 #self.states is a list used to store all of an FSM's states.
 class FSM():
-	def __init__(self,_startState=None):
+	def __init__(self,_alphabet=[],_startState=None):
 		self.deterministic = True
 		self.states = []
 		self.startState = _startState
+		self.alphabet = _alphabet
 
 	def addState(self,_state):
 		self.states.append(_state)
+
+		#Assumes that the first state added is the starting state.
 		if (self.startState == None) and (len(self.states) == 1):
 			self.startState = _state
 
@@ -20,6 +23,13 @@ class FSM():
 			self.states.remove(_state)
 		else:
 			"That state isn't even in here, ya goon."
+
+	#Sets the T/F value for this FSM's determinism.
+	def determineDeterminism(self):
+		self.deterministic = True
+		for state in self.states:
+			if not state.deterministic:
+				self.deterministic = False
 
 	def toString(self):
 		for s in self.states:
@@ -91,9 +101,12 @@ class FSM():
 		return (activeState.accepting and stringSuccess)
 
 
+#self.deterministic is a boolean used to represent the individual state's determinism
 #self.transitions is a list used to store all of a State's outgoing transitions
+#self.label is a string used to describe the state
+#self.accepting is a boolean used to represent whether this is a final state
 class State():
-	def __init__(self,_label,_accepting=False,):
+	def __init__(self,_label,_accepting=False):
 		self.deterministic = True
 		self.transitions = []
 		self.label = _label
@@ -110,6 +123,7 @@ class State():
 	def getTransitions(self):
 		print map(lambda x: x.label, self.transitions)
 
+
 #self.destination should be a State() object
 #self.label should be a character
 class Transition():
@@ -119,7 +133,7 @@ class Transition():
 
 
 #PDAs are just like FSMs, but with a stack!
-#This means they need to use PDA_Transition objects instead of regular ones
+#This means they need to use PDA_Transition objects instead of regular Transition objects
 class PDA(FSM):
 	def __init__(self,_startState=None):
 		self.deterministic = True
@@ -208,7 +222,7 @@ class PDA(FSM):
 						self.stack.pop()
 
 					else:
-						print "That is not a candidate for r/popping"
+						print "That is not a candidate for /r/popping"
 						stringSuccess = False
 
 				#Push second
@@ -230,6 +244,10 @@ class PDA(FSM):
 		return (activeState.accepting and stringSuccess and len(self.stack)==0)
 
 
+#self.destination should be a State() object
+#self.label should be a character
+#self.push should be a character
+#self.pop should be a character
 class PDA_Transition(Transition):
 	def __init__(self,_destination,_label,_push,_pop):
 		self.destination = _destination
