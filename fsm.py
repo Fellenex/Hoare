@@ -9,6 +9,8 @@ class FSM():
 		self.deterministic = True
 		self.states = []
 		self.startState = _startState
+		if not(_startState is None):
+			self.states.append(_startState)
 		self.alphabet = _alphabet
 
 	def addState(self,_state):
@@ -24,6 +26,20 @@ class FSM():
 		else:
 			"That state isn't even in here, ya goon."
 
+	#Returns the state in _stateList which has _label as its label.
+	def findState(self, _label):
+		relevantStates = filter(lambda x : x.label == _label, self.states)
+
+		if len(relevantStates) > 1:
+			print "Error: Multiple states with duplicate label: "+_label
+		
+		elif len(relevantStates) == 0:
+			print "Error: No state with label "+_label
+
+		print "Was looking for a state with "+_label+" and found "+str(relevantStates[0].label)
+
+		return relevantStates[0]
+
 	#Sets the T/F value for this FSM's determinism.
 	def determineDeterminism(self):
 		self.deterministic = True
@@ -36,10 +52,11 @@ class FSM():
 			print s.label
 			transitionString = "["
 			for t in s.transitions:
-				transitionString+=t.label+", "
+				transitionString+=t.label+":"+t.destination.label+", "
 
 			transitionString = transitionString[:-1]+"]"
 			print transitionString
+			print
 
 	def parseString(self,_string):
 		c=0
@@ -122,6 +139,10 @@ class State():
 
 	def getTransitions(self):
 		print map(lambda x: x.label, self.transitions)
+
+	#Returns all transitions using the specified trigger character
+	def getCharTransitions(self, _char):
+		return filter(lambda x : x.label == _char, self.transitions)
 
 
 #self.destination should be a State() object
